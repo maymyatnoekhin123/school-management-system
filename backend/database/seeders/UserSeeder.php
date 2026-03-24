@@ -35,14 +35,15 @@ $students =
                 'student_id'      => fake()->unique()->numberBetween(10000, 99999),
         'dob'             => fake()->date('Y-m-d', '2012-12-31'),
         'gender'          => fake()->randomElement(['male', 'female']),
+        "arabic_name"       => fake()->name(),
         'father_name'     => 'U ' . fake()->name('male'),
         'mother_name'     => 'Daw ' . fake()->name('female'),
         'address'         => fake()->address(),
         'phone'           => fake()->phoneNumber(),
-        'father_occupation' => fake()->jobTitle(),
+        'father_arabic_name' => fake()->name("male"),
         "current_education" => fake()->randomElement(["Grade 9","Grade 10","High School Passed","Bachelor of Arts","Undergraduate"]),
-        'other_qualification' => fake()->optional()->sentence(3),
-        "reason_of_join" => fake()->paragraph(1),
+        'mother_arabic_name' => fake()->name('female'),
+        "isNew" => fake()->randomElement(["new","old"]),
 
             ]);
         }

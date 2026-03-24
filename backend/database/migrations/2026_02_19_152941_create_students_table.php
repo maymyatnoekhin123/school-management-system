@@ -14,19 +14,20 @@ return new class extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->integer("student_id");
+            $table->string("arabic_name")->nullable();
             $table->date("dob");
             $table->enum("gender",["male","female"]);
             $table->string("father_name");
+            $table->string("father_arabic_name")->nullable();
             $table->string("mother_name");
+            $table->string("mother_arabic_name")->nullable();
             $table->string("relationship")->nullable();
             $table->string("address");
             $table->string("phone");
-            $table->string("father_occupation");
+            $table->string("isNew")->nullable();
             $table->string("current_education");
-            $table->string("other_qualification")->nullable();
             $table->string("previous_school")->nullable();
             $table->string("previous_class")->nullable();
-            $table->text("reason_of_join");
             
             $table->foreignId("user_id")->constrained()->onDelete("cascade");
             $table->timestamps();

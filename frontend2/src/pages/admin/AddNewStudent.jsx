@@ -7,7 +7,6 @@ import {
 } from "@mui/material";
 import { PhotoCamera } from "@mui/icons-material";
 import { useRef, useState } from "react";
-import { useApp } from "../../ThemeApp";
 import { useNavigate } from "react-router-dom";
 
 const FormRow = ({ label, mmLabel, children }) => (
@@ -34,40 +33,28 @@ export default function AddNewStudent() {
      const { handleCreate, isLoading } = useCreateStudent();
      const { classrooms } = useClassrooms();
      const [error, setError] = useState(null);
-     // const { setGlobalMsg } = useApp();
      const navigate = useNavigate();
      const [preview, setPreview] = useState(null);
      const [imageFile, setImageFile] = useState(null);
      const [selectedClassrooms, setSelectedClassrooms] = useState([]);
 
-     // Existing Refs
-     const nameInput = useRef();
-     const emailInput = useRef();
-     const passwordInput = useRef();
+     // REFS matched to Schema
      const studentIdInput = useRef();
+     const nameInput = useRef(); // Maps to your general name logic
+     const arabNameInput = useRef();
      const dobInput = useRef();
      const genderInput = useRef();
      const fatherNameInput = useRef();
+     const fatherArabNameInput = useRef();
      const motherNameInput = useRef();
+     const motherArabNameInput = useRef();
+     const relationshipInput = useRef();
      const addressInput = useRef();
      const phoneInput = useRef();
-     const fatherOccuInput = useRef();
+     const isNewInput = useRef();
      const currentEduInput = useRef();
-     const otherQualiInput = useRef();
-     const reasonInput = useRef();
-
-     // NEW REFS ADDED HERE
-     const relationshipInput = useRef();
      const previousSchoolInput = useRef();
      const previousClassInput = useRef();
-
-     const getLimitDate = (yearsAgo) => {
-          const d = new Date();
-          d.setFullYear(d.getFullYear() - yearsAgo);
-          return d.toISOString().split('T')[0];
-     };
-     const minDateStr = getLimitDate(18);
-     const maxDateStr = getLimitDate(5);
 
      const handleImageChange = e => {
           const file = e.target.files[0];
@@ -90,23 +77,20 @@ export default function AddNewStudent() {
           }
 
           const formData = new FormData();
-          formData.append("name", nameInput.current.value);
-          formData.append("email", emailInput.current.value);
-          formData.append("password", passwordInput.current.value);
           formData.append("student_id", studentIdInput.current.value);
+          formData.append("name", nameInput.current.value);
+          formData.append("arabic_name", arabNameInput.current.value);
           formData.append("dob", dobInput.current.value);
           formData.append("gender", genderInput.current.value);
           formData.append("father_name", fatherNameInput.current.value);
+          formData.append("father_arabic_name", fatherArabNameInput.current.value);
           formData.append("mother_name", motherNameInput.current.value);
+          formData.append("mother_arabic_name", motherArabNameInput.current.value);
+          formData.append("relationship", relationshipInput.current.value);
           formData.append("address", addressInput.current.value);
           formData.append("phone", phoneInput.current.value);
-          formData.append("father_occupation", fatherOccuInput.current.value);
+          formData.append("isNew", isNewInput.current.value);
           formData.append("current_education", currentEduInput.current.value);
-          formData.append("other_qualification", otherQualiInput.current.value);
-          formData.append("reason_of_join", reasonInput.current.value);
-
-          // APPENDING NEW FIELDS TO FORMDATA
-          formData.append("relationship", relationshipInput.current.value);
           formData.append("previous_school", previousSchoolInput.current.value);
           formData.append("previous_class", previousClassInput.current.value);
 
@@ -140,25 +124,36 @@ export default function AddNewStudent() {
                          </Box>
                     </Box>
 
-                    <Divider sx={{ mb: 4, fontWeight: 600 }}>ACCOUNT ACCESS</Divider>
+                    <Divider sx={{ mb: 4, fontWeight: 600 }}>BASIC INFO</Divider>
+
+                    <FormRow label="Student ID" mmLabel="ကျောင်းသားနံပါတ်">
+                         <TextField fullWidth size="small" type="number" inputRef={studentIdInput} placeholder="Integer only" required sx={{ bgcolor: 'background.default' }} />
+                    </FormRow>
 
                     <FormRow label="Full Name" mmLabel="အမည်အပြည့်အစုံ">
                          <TextField fullWidth size="small" inputRef={nameInput} placeholder="Enter Name" required sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
 
-                    <FormRow label="Email Address" mmLabel="အီးမေးလ်">
-                         <TextField fullWidth size="small" type="email" inputRef={emailInput} placeholder="example@mail.com" required sx={{ bgcolor: 'background.default' }} />
+                    <FormRow label="Arabic Name" mmLabel="အာရဗီနာမည်">
+                         <TextField fullWidth size="small" inputRef={arabNameInput} placeholder="Enter Arabic Name" sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
 
-                    <FormRow label="Password" mmLabel="လျှို့ဝှက်နံပါတ်">
-                         <TextField fullWidth size="small" type="password" inputRef={passwordInput} placeholder="At least 8 characters" required sx={{ bgcolor: 'background.default' }} />
+                    <FormRow label="Date of Birth" mmLabel="မွေးသက္ကရာဇ်">
+                         <TextField
+                              fullWidth size="small" type="date" inputRef={dobInput}
+                              InputLabelProps={{ shrink: true }}
+                              required sx={{ bgcolor: 'background.default' }}
+                         />
                     </FormRow>
 
-                    <Divider sx={{ my: 4, fontWeight: 600 }}>STUDENT DETAILS</Divider>
-
-                    <FormRow label="Student ID" mmLabel="ကျောင်းသားနံပါတ်">
-                         <TextField fullWidth size="small" type="number" inputRef={studentIdInput} placeholder="Integer only" required sx={{ bgcolor: 'background.default' }} />
+                    <FormRow label="Gender" mmLabel="ကျား/မ">
+                         <Select fullWidth size="small" inputRef={genderInput} defaultValue="male" sx={{ bgcolor: 'background.default' }}>
+                              <MenuItem value="male">Male (ကျား)</MenuItem>
+                              <MenuItem value="female">Female (မ)</MenuItem>
+                         </Select>
                     </FormRow>
+
+                    <Divider sx={{ my: 4, fontWeight: 600 }}>EDUCATION</Divider>
 
                     <FormRow label="Select Classrooms" mmLabel="အတန်းများရွေးချယ်ပါ">
                          <FormControl fullWidth size="small" sx={{ bgcolor: 'background.default' }}>
@@ -186,27 +181,10 @@ export default function AddNewStudent() {
                          </FormControl>
                     </FormRow>
 
-                    <FormRow label="Date of Birth" mmLabel="မွေးသက္ကရာဇ်">
-                         <TextField
-                              fullWidth size="small" type="date" inputRef={dobInput}
-                              InputLabelProps={{ shrink: true }}
-                              slotProps={{ htmlInput: { min: minDateStr, max: maxDateStr } }}
-                              required sx={{ bgcolor: 'background.default' }}
-                         />
-                    </FormRow>
-
-                    <FormRow label="Gender" mmLabel="ကျား/မ">
-                         <Select fullWidth size="small" inputRef={genderInput} defaultValue="male" sx={{ bgcolor: 'background.default' }}>
-                              <MenuItem value="male">Male (ကျား)</MenuItem>
-                              <MenuItem value="female">Female (မ)</MenuItem>
-                         </Select>
-                    </FormRow>
-
                     <FormRow label="Current Education" mmLabel="လက်ရှိပညာအရည်အချင်း">
                          <TextField fullWidth size="small" inputRef={currentEduInput} placeholder="e.g. Grade 11" required sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
 
-                    {/* NEW FIELDS ADDED HERE */}
                     <FormRow label="Previous School" mmLabel="ယခင်ကျောင်းအမည်">
                          <TextField fullWidth size="small" inputRef={previousSchoolInput} placeholder="Enter Previous School" sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
@@ -215,21 +193,31 @@ export default function AddNewStudent() {
                          <TextField fullWidth size="small" inputRef={previousClassInput} placeholder="Enter Previous Class" sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
 
+                    <FormRow label="Admission Type" mmLabel="ကျောင်းသားသစ်/ဟောင်း">
+                         <Select fullWidth size="small" inputRef={isNewInput} defaultValue="yes" sx={{ bgcolor: 'background.default' }}>
+                              <MenuItem value="yes">New Student (ကျောင်းသားသစ်)</MenuItem>
+                              <MenuItem value="no">Old Student (ကျောင်းသားဟောင်း)</MenuItem>
+                         </Select>
+                    </FormRow>
+
                     <Divider sx={{ my: 4, fontWeight: 600 }}>FAMILY & ADDRESS</Divider>
 
                     <FormRow label="Father Name" mmLabel="ဖခင်အမည်">
                          <TextField fullWidth size="small" inputRef={fatherNameInput} required sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
 
-                    <FormRow label="Father Occupation" mmLabel="ဖခင်အလုပ်အကိုင်">
-                         <TextField fullWidth size="small" inputRef={fatherOccuInput} sx={{ bgcolor: 'background.default' }} />
+                    <FormRow label="Father Arabic Name" mmLabel="ဖခင်အာရဗီအမည်">
+                         <TextField fullWidth size="small" inputRef={fatherArabNameInput} sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
 
                     <FormRow label="Mother Name" mmLabel="မိခင်အမည်">
                          <TextField fullWidth size="small" inputRef={motherNameInput} required sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
 
-                    {/* NEW FIELD ADDED HERE */}
+                    <FormRow label="Mother Arabic Name" mmLabel="မိခင်အာရဗီအမည်">
+                         <TextField fullWidth size="small" inputRef={motherArabNameInput} sx={{ bgcolor: 'background.default' }} />
+                    </FormRow>
+
                     <FormRow label="Relationship" mmLabel="တော်စပ်ပုံ">
                          <TextField fullWidth size="small" inputRef={relationshipInput} placeholder="e.g. Parents" sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
@@ -240,14 +228,6 @@ export default function AddNewStudent() {
 
                     <FormRow label="Home Address" mmLabel="နေရပ်လိပ်စာ">
                          <TextField fullWidth size="small" multiline rows={2} inputRef={addressInput} required sx={{ bgcolor: 'background.default' }} />
-                    </FormRow>
-
-                    <FormRow label="Other Qualification" mmLabel="အခြားအရည်အချင်း">
-                         <TextField fullWidth size="small" inputRef={otherQualiInput} sx={{ bgcolor: 'background.default' }} />
-                    </FormRow>
-
-                    <FormRow label="Reason for Joining" mmLabel="တက်ရောက်လိုသည့်အကြောင်းရင်း">
-                         <TextField fullWidth size="small" multiline rows={3} inputRef={reasonInput} placeholder="Write something..." required sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
 
                     <Button
