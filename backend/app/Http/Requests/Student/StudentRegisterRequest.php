@@ -21,10 +21,11 @@ class StudentRegisterRequest extends FormRequest
      */
     public function rules(): array
     {
-        $minDate = now()->subYear(18)->format("Y-m-d");
+        $minDate = now()->subYear(30)->format("Y-m-d");
         $maxDate = now()->subYear(5)->format("Y-m-d");
         return [
             "name" => "required|string",
+            "arabic_name" => "required|string",
             "email" => "required|string",
             "password" => "required|string",
             "student_id" => "required|numeric",
@@ -32,15 +33,19 @@ class StudentRegisterRequest extends FormRequest
             "gender" => "required|string",
             "image" => "nullable|image|file|min:100|max:5120",
             "father_name" => "required|string",
+            "father_arabic_name" => "required|string",
             "mother_name" => "required|string",
+            "mother_arabic_name" => "required|string",
             "address" => "required|string",
             "phone" => "required|string",
-            "father_occupation" => "nullable|string",
+            "relationship" => "string",
+            "isNew" => "string",
             "current_education" => "required|string",
-            "other_qualification" => "nullable|string",
-            "reason_of_join" => "required|string", 
+            "previous_school" => "required|string",
+            "previous_class" => "required|string",
             "classroom_ids" => "required|array|min:1",
             "classroom_ids.*" => "integer|exists:classrooms,id",
+
         ];
     }
 }

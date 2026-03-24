@@ -38,10 +38,12 @@ export default function AddNewStudent() {
      const [imageFile, setImageFile] = useState(null);
      const [selectedClassrooms, setSelectedClassrooms] = useState([]);
 
-     // REFS matched to Schema
+     // REFS
      const studentIdInput = useRef();
-     const nameInput = useRef(); // Maps to your general name logic
+     const nameInput = useRef();
      const arabNameInput = useRef();
+     const emailInput = useRef(); // REQUIRED BY LARAVEL REQUEST
+     const passwordInput = useRef(); // REQUIRED BY LARAVEL REQUEST
      const dobInput = useRef();
      const genderInput = useRef();
      const fatherNameInput = useRef();
@@ -72,27 +74,32 @@ export default function AddNewStudent() {
      const handleSubmit = (e) => {
           e.preventDefault();
           if (selectedClassrooms.length === 0) {
-               setError("Please select at least one classroom (အနည်းဆုံး အတန်းတစ်ခု ရွေးချယ်ပေးပါ)");
+               setError("Please select at least one classroom");
                return;
           }
 
           const formData = new FormData();
+          // Required by Laravel Request
           formData.append("student_id", studentIdInput.current.value);
           formData.append("name", nameInput.current.value);
-          formData.append("arabic_name", arabNameInput.current.value);
+          formData.append("arabic_name", arabNameInput.current.value || "");
+          formData.append("email", emailInput.current.value);
+          formData.append("password", passwordInput.current.value);
           formData.append("dob", dobInput.current.value);
           formData.append("gender", genderInput.current.value);
           formData.append("father_name", fatherNameInput.current.value);
-          formData.append("father_arabic_name", fatherArabNameInput.current.value);
+          formData.append("father_arabic_name", fatherArabNameInput.current.value || "");
           formData.append("mother_name", motherNameInput.current.value);
-          formData.append("mother_arabic_name", motherArabNameInput.current.value);
-          formData.append("relationship", relationshipInput.current.value);
+          formData.append("mother_arabic_name", motherArabNameInput.current.value || "");
+          formData.append("relationship", relationshipInput.current.value || "");
           formData.append("address", addressInput.current.value);
           formData.append("phone", phoneInput.current.value);
-          formData.append("isNew", isNewInput.current.value);
+          formData.append("isNew", isNewInput.current.value || "yes");
           formData.append("current_education", currentEduInput.current.value);
-          formData.append("previous_school", previousSchoolInput.current.value);
-          formData.append("previous_class", previousClassInput.current.value);
+
+          // These were in schema but missing from your previous formData.append list
+          formData.append("previous_school", previousSchoolInput.current.value || "");
+          formData.append("previous_class", previousClassInput.current.value || "");
 
           selectedClassrooms.forEach(id => formData.append("classroom_ids[]", id));
           if (imageFile) formData.append("image", imageFile);
@@ -105,10 +112,9 @@ export default function AddNewStudent() {
           <Paper elevation={0} sx={{
                maxWidth: 850, mx: 'auto', p: { xs: 2, md: 4 }, mt: 2,
                borderRadius: '16px', border: '1px solid', borderColor: 'divider',
-               bgcolor: (theme) => theme.palette.mode === 'light' ? '#fcfcfc' : 'background.paper'
           }}>
                <Typography variant="h5" sx={{ mb: 4, fontWeight: 'bold', textAlign: 'center', color: 'primary.main' }}>
-                    Student Registration (ကျောင်းသားအပ်နှံခြင်း)
+                    Student Registration
                </Typography>
 
                {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
@@ -124,50 +130,52 @@ export default function AddNewStudent() {
                          </Box>
                     </Box>
 
-                    <Divider sx={{ mb: 4, fontWeight: 600 }}>BASIC INFO</Divider>
+                    <Divider sx={{ mb: 4, fontWeight: 600 }}>LOGIN ACCOUNT</Divider>
+
+                    <FormRow label="Email Address" mmLabel="အီးမေးလ်">
+                         <TextField fullWidth size="small" type="email" inputRef={emailInput} required sx={{ bgcolor: 'background.default' }} />
+                    </FormRow>
+
+                    <FormRow label="Password" mmLabel="လျှို့ဝှက်နံပါတ်">
+                         <TextField fullWidth size="small" type="password" inputRef={passwordInput} required sx={{ bgcolor: 'background.default' }} />
+                    </FormRow>
+
+                    <Divider sx={{ my: 4, fontWeight: 600 }}>STUDENT INFO</Divider>
 
                     <FormRow label="Student ID" mmLabel="ကျောင်းသားနံပါတ်">
-                         <TextField fullWidth size="small" type="number" inputRef={studentIdInput} placeholder="Integer only" required sx={{ bgcolor: 'background.default' }} />
+                         <TextField fullWidth size="small" type="number" inputRef={studentIdInput} required sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
 
                     <FormRow label="Full Name" mmLabel="အမည်အပြည့်အစုံ">
-                         <TextField fullWidth size="small" inputRef={nameInput} placeholder="Enter Name" required sx={{ bgcolor: 'background.default' }} />
+                         <TextField fullWidth size="small" inputRef={nameInput} required sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
 
                     <FormRow label="Arabic Name" mmLabel="အာရဗီနာမည်">
-                         <TextField fullWidth size="small" inputRef={arabNameInput} placeholder="Enter Arabic Name" sx={{ bgcolor: 'background.default' }} />
+                         <TextField fullWidth size="small" inputRef={arabNameInput} sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
 
                     <FormRow label="Date of Birth" mmLabel="မွေးသက္ကရာဇ်">
-                         <TextField
-                              fullWidth size="small" type="date" inputRef={dobInput}
-                              InputLabelProps={{ shrink: true }}
-                              required sx={{ bgcolor: 'background.default' }}
-                         />
+                         <TextField fullWidth size="small" type="date" inputRef={dobInput} InputLabelProps={{ shrink: true }} required sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
 
                     <FormRow label="Gender" mmLabel="ကျား/မ">
-                         <Select fullWidth size="small" inputRef={genderInput} defaultValue="male" sx={{ bgcolor: 'background.default' }}>
-                              <MenuItem value="male">Male (ကျား)</MenuItem>
-                              <MenuItem value="female">Female (မ)</MenuItem>
+                         <Select fullWidth size="small" inputRef={genderInput} defaultValue="male">
+                              <MenuItem value="male">Male</MenuItem>
+                              <MenuItem value="female">Female</MenuItem>
                          </Select>
                     </FormRow>
 
                     <Divider sx={{ my: 4, fontWeight: 600 }}>EDUCATION</Divider>
 
-                    <FormRow label="Select Classrooms" mmLabel="အတန်းများရွေးချယ်ပါ">
-                         <FormControl fullWidth size="small" sx={{ bgcolor: 'background.default' }}>
+                    <FormRow label="Select Classrooms" mmLabel="အတန်းများ">
+                         <FormControl fullWidth size="small">
                               <InputLabel>Choose Classes</InputLabel>
                               <Select
-                                   multiple
-                                   value={selectedClassrooms}
-                                   onChange={handleClassroomChange}
+                                   multiple value={selectedClassrooms} onChange={handleClassroomChange}
                                    input={<OutlinedInput label="Choose Classes" />}
                                    renderValue={(selected) => (
                                         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                             {selected.map((value) => (
-                                                  <Chip key={value} label={classrooms?.find(c => c.id === value)?.name} size="small" color="primary" variant="outlined" />
-                                             ))}
+                                             {selected.map((val) => <Chip key={val} label={classrooms?.find(c => c.id === val)?.name} size="small" />)}
                                         </Box>
                                    )}
                               >
@@ -182,21 +190,21 @@ export default function AddNewStudent() {
                     </FormRow>
 
                     <FormRow label="Current Education" mmLabel="လက်ရှိပညာအရည်အချင်း">
-                         <TextField fullWidth size="small" inputRef={currentEduInput} placeholder="e.g. Grade 11" required sx={{ bgcolor: 'background.default' }} />
+                         <TextField fullWidth size="small" inputRef={currentEduInput} required sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
 
                     <FormRow label="Previous School" mmLabel="ယခင်ကျောင်းအမည်">
-                         <TextField fullWidth size="small" inputRef={previousSchoolInput} placeholder="Enter Previous School" sx={{ bgcolor: 'background.default' }} />
+                         <TextField fullWidth size="small" inputRef={previousSchoolInput} sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
 
                     <FormRow label="Previous Class" mmLabel="ယခင်အတန်း">
-                         <TextField fullWidth size="small" inputRef={previousClassInput} placeholder="Enter Previous Class" sx={{ bgcolor: 'background.default' }} />
+                         <TextField fullWidth size="small" inputRef={previousClassInput} sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
 
                     <FormRow label="Admission Type" mmLabel="ကျောင်းသားသစ်/ဟောင်း">
-                         <Select fullWidth size="small" inputRef={isNewInput} defaultValue="yes" sx={{ bgcolor: 'background.default' }}>
-                              <MenuItem value="yes">New Student (ကျောင်းသားသစ်)</MenuItem>
-                              <MenuItem value="no">Old Student (ကျောင်းသားဟောင်း)</MenuItem>
+                         <Select fullWidth size="small" inputRef={isNewInput} defaultValue="yes">
+                              <MenuItem value="yes">New Student</MenuItem>
+                              <MenuItem value="no">Old Student</MenuItem>
                          </Select>
                     </FormRow>
 
@@ -219,11 +227,11 @@ export default function AddNewStudent() {
                     </FormRow>
 
                     <FormRow label="Relationship" mmLabel="တော်စပ်ပုံ">
-                         <TextField fullWidth size="small" inputRef={relationshipInput} placeholder="e.g. Parents" sx={{ bgcolor: 'background.default' }} />
+                         <TextField fullWidth size="small" inputRef={relationshipInput} sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
 
                     <FormRow label="Phone Number" mmLabel="ဖုန်းနံပါတ်">
-                         <TextField fullWidth size="small" inputRef={phoneInput} placeholder="09..." required sx={{ bgcolor: 'background.default' }} />
+                         <TextField fullWidth size="small" inputRef={phoneInput} required sx={{ bgcolor: 'background.default' }} />
                     </FormRow>
 
                     <FormRow label="Home Address" mmLabel="နေရပ်လိပ်စာ">
@@ -231,10 +239,10 @@ export default function AddNewStudent() {
                     </FormRow>
 
                     <Button
-                         type="submit" variant="contained" color="primary" fullWidth size="large"
-                         disabled={isLoading} sx={{ mt: 3, py: 1.5, borderRadius: '10px', fontWeight: 'bold' }}
+                         type="submit" variant="contained" fullWidth size="large"
+                         disabled={isLoading} sx={{ mt: 3, py: 1.5, fontWeight: 'bold' }}
                     >
-                         {isLoading ? <CircularProgress size={24} color="inherit" /> : 'REGISTER STUDENT (စာရင်းသွင်းမည်)'}
+                         {isLoading ? <CircularProgress size={24} color="inherit" /> : 'REGISTER STUDENT'}
                     </Button>
                </form>
           </Paper>

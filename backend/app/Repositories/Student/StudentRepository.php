@@ -29,16 +29,20 @@ class StudentRepository implements StudentRepositoryInterface
           
           $student = $user->student()->create([
             "student_id" => $data["student_id"],
+            "arabic_name" => $data["arabic_name"],
             "dob" => $data["dob"],
             "gender" => $data["gender"],
             "father_name" => $data["father_name"],
+            'father_arabic_name' => $data["father_arabic_name"],
             "mother_name" => $data["mother_name"],
+            'mother_arabic_name' => $data["mother_arabic_name"],
             "address" => $data["address"],
             "phone" => $data["phone"],
-            "father_occupation" => $data["father_occupation"],
+            'relationship' => $data["relationship"],
+            'isNew' => $data["isNew"],
             "current_education" => $data["current_education"],
-            "other_qualification" => $data["other_qualification"],
-            "reason_of_join" => $data["reason_of_join"],
+            "previous_school" => $data["previous_school"],
+            "previous_class" => $data["previous_class"],
         ]);
 
         if($path){
