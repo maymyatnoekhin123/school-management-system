@@ -17,6 +17,8 @@ import UpdateStudent from "./pages/students/UpdateStudent";
 import UpdateTeacher from "./pages/teachers/UpdateTeacher";
 import AddNewTeacher from "./pages/admin/AddNewTeacher";
 import Classroom from "./pages/admin/Classrooms";
+import AddNewClassroom from "./pages/admin/AddNewClassroom";
+import UpdateClassroom from "./pages/admin/UpdateClassroom";
 
 const AppContext = createContext();
 
@@ -46,6 +48,8 @@ const router = createBrowserRouter([
                          { path: "admin/teachers/edit/:id", element: <UpdateTeacher /> },
 
                          { path: "admin/classrooms", element: <Classroom/> },
+                         {path : "/admin/classrooms/create",element : <AddNewClassroom/>},
+                         { path: "/admin/classrooms/edit/:id", element: <UpdateClassroom /> }
                     ],
                },
 

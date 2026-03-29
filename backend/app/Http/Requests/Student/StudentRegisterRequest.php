@@ -21,15 +21,13 @@ class StudentRegisterRequest extends FormRequest
      */
     public function rules(): array
     {
-        $minDate = now()->subYear(30)->format("Y-m-d");
-        $maxDate = now()->subYear(5)->format("Y-m-d");
         return [
             "name" => "required|string",
             "arabic_name" => "required|string",
             "email" => "required|string",
             "password" => "required|string",
             "student_id" => "required|numeric",
-            "dob" => "required|date|after_or_equal:$minDate|before_or_equal:$maxDate",
+            "dob" => "required|date",
             "gender" => "required|string",
             "image" => "nullable|image|file|min:100|max:5120",
             "father_name" => "required|string",

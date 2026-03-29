@@ -24,6 +24,7 @@ Route::apiResource('/permissions', PermissionController::class);
 Route::post('/addPermission', [User::class, 'addPermission']);
 Route::get('/years/active', [Academic_Year_Controller::class, 'getCurrentYear']);
 Route::get("/classrooms",[ClassroomController::class,"index"]);
+Route::get("/classrooms/{id}",[ClassroomController::class,"show"]);
 
 // Route::apiResource("/permissions",PermissionController::class);
 // Route::get("/",[PermissionController::class,"index"]);
@@ -40,6 +41,9 @@ Route::group(['middleware' => 'auth:api'], function () {
         // Route::patch("/users/{id}",[])
         Route::patch("/students/{id}",[StudentController::class,"update"]);
         Route::patch("/teachers/{id}",[TeacherController::class,"update"]);
+        Route::post("/classrooms",[ClassroomController::class,"create"]);
+        Route::patch("/classrooms/{id}",[ClassroomController::class,"update"]);
+        Route::delete("/classrooms/{id}",[ClassroomController::class,"delete"]);
     });
 
     Route::get('/auth/verify', [AuthController::class, 'verify'])->name('verify');
@@ -47,7 +51,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/auth/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-// routes/api.php ထဲမှာ ထည့်ရန်
 
 Route::get('/init-db', function() {
     try {

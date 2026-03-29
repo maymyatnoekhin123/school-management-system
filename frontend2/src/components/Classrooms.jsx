@@ -3,7 +3,7 @@ import {
      Table, TableBody, TableCell, TableContainer,
      TableHead, TableRow, Paper, Typography, Chip, Box, Button, Stack, useTheme
 } from '@mui/material';
-
+import { useClassrooms } from '../hooks/classrooms';
 import { useNavigate } from 'react-router-dom';
 import {
      Edit as EditIcon,
@@ -17,6 +17,7 @@ const ClassroomsTable = ({ classrooms }) => {
      const navigate = useNavigate();
      const theme = useTheme();
      const isDark = theme.palette.mode === 'dark';
+     const { useDeleteClassroom } = useClassrooms();
 
      // Class configuration for consistent styling
      const classConfig = {
@@ -76,6 +77,10 @@ const ClassroomsTable = ({ classrooms }) => {
                                    </Box>
                               </Stack>
                          </Box>
+
+                         <Button onClick={() => navigate("/admin/classrooms/create")} sx={{ color: "black", backgroundColor: "yellow", "&:hover": { backgroundColor: "#e6e600",color : "black",opacity : 0.9}}}>
+                                    အတန်းသစ်ထည့်မည်    
+                         </Button>
                          <Chip
                               label={`${classrooms?.length || 0} Total Classes`}
                               variant="outlined"
@@ -177,7 +182,7 @@ const ClassroomsTable = ({ classrooms }) => {
                                                             size="small"
                                                             variant="contained"
                                                             disableElevation
-                                                            onClick={() => {}}
+                                                            onClick={() => useDeleteClassroom.mutate(room.id)}
                                                             sx={{
                                                                  minWidth: { xs: 35, md: 80 },
                                                                  borderRadius: '8px',
